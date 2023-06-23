@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace ConnectFour
 {
@@ -6,6 +7,8 @@ namespace ConnectFour
     {
         int GetMove();
     }
+
+
 
     class HumanPlayer : IPlayer
     {
@@ -16,6 +19,9 @@ namespace ConnectFour
             return col;
         }
     }
+
+
+
 
     class ConnectFourModel
     {
@@ -67,6 +73,7 @@ namespace ConnectFour
                 }
             }
         }
+
         public bool CheckWin()
         {
             int rows = board.GetLength(0);
@@ -161,25 +168,26 @@ namespace ConnectFour
         }
     }
 
+
+
+
+
     class GameController
     {
         private ConnectFourModel model;
         private IPlayer player1;
         private IPlayer player2;
-        private bool isPlaying;
 
         public GameController()
         {
             model = new ConnectFourModel();
             player1 = new HumanPlayer();
             player2 = new HumanPlayer();
-            isPlaying = true;
         }
 
-        // Starts the game and handles player turns
         public void StartGame()
         {
-            while (isPlaying)
+            while (true)
             {
                 Console.Clear();
                 char[,] board = model.GetBoard();
@@ -200,14 +208,14 @@ namespace ConnectFour
                         Console.Clear();
                         DisplayBoard(board);
                         Console.WriteLine("Player " + currentPlayer + " wins!");
-                        PromptRestart();
+                        break;
                     }
                     else if (model.IsBoardFull())
                     {
                         Console.Clear();
                         DisplayBoard(board);
                         Console.WriteLine("It's a draw!");
-                        PromptRestart();
+                        break;
                     }
 
                     model.SwitchPlayer();
@@ -220,7 +228,8 @@ namespace ConnectFour
             }
         }
 
-        // Displays the game board
+
+
         private void DisplayBoard(char[,] board)
         {
             int rows = board.GetLength(0);
@@ -247,36 +256,8 @@ namespace ConnectFour
             }
             Console.WriteLine();
         }
-
-        // Prompts the player to restart, quit, or play again
-        private void PromptRestart()
-        {
-            Console.WriteLine("Do you want to play again? (Y/N)");
-
-            while (true)
-            {
-                string choice = Console.ReadLine().ToUpper();
-
-                if (choice == "Y")
-                {
-                    model = new ConnectFourModel();
-                    isPlaying = true;
-                    break;
-                }
-                else if (choice == "N")
-                {
-                    isPlaying = false;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid choice! Please enter Y or N.");
-                }
-            }
-        }
     }
 
-    
 
 
 
@@ -286,7 +267,7 @@ namespace ConnectFour
         {
             GameController gameController = new GameController();
             gameController.StartGame();
+
         }
     }
 }
-
