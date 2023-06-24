@@ -128,15 +128,14 @@ namespace ConnectFour
                 {
                     char token = board[row, col];
                     if (token != ' ' &&
-                        token == board[row + 1, col - 1] &&
-                        token == board[row + 2, col - 2] &&
-                        token == board[row + 3, col - 3])
+                    token == board[row + 1, col - 1] &&
+                    token == board[row + 2, col - 2] &&
+                    token == board[row + 3, col - 3])
                     {
                         return true;
                     }
                 }
             }
-
             return false;
         }
 
@@ -166,6 +165,7 @@ namespace ConnectFour
         private ConnectFourModel model;
         private IPlayer player1;
         private IPlayer player2;
+        private string currentPlayerName;
 
         public GameController()
         {
@@ -213,7 +213,8 @@ namespace ConnectFour
                 DisplayBoard(board);
 
                 char currentPlayer = model.GetCurrentPlayer();
-                Console.WriteLine("It is Player " + currentPlayer + "'s turn.");
+                currentPlayerName = (currentPlayer == 'X') ? "Player 1" : "Player 2";
+                Console.WriteLine("It is " + currentPlayerName + "'s turn.");
 
                 IPlayer currentPlayerObj = (currentPlayer == 'X') ? player1 : player2;
                 int move = currentPlayerObj.GetMove();
@@ -226,7 +227,7 @@ namespace ConnectFour
                     {
                         Console.Clear();
                         DisplayBoard(board);
-                        Console.WriteLine("Player " + currentPlayer + " wins!");
+                        Console.WriteLine(currentPlayerName + " wins!");
                         gameOver = true;
                     }
                     else if (model.IsBoardFull())
@@ -246,8 +247,12 @@ namespace ConnectFour
                 }
             }
 
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
+            Console.WriteLine("Press R to restart or any other key to exit.");
+            var key = Console.ReadKey().Key;
+            if (key == ConsoleKey.R)
+            {
+                StartGame();
+            }
         }
 
         private void DisplayBoard(char[,] board)
@@ -268,9 +273,7 @@ namespace ConnectFour
             {
                 Console.Write("---");
             }
-            Console.WriteLine();
-
-            for (int col = 0; col < columns; col++)
+            Console.WriteLine(); for (int col = 0; col < columns; col++)
             {
                 Console.Write("  " + (col + 1) + " ");
             }
@@ -287,3 +290,4 @@ namespace ConnectFour
         }
     }
 }
+
