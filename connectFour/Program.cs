@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace ConnectFour
 {
@@ -7,8 +6,6 @@ namespace ConnectFour
     {
         int GetMove();
     }
-
-
 
     class HumanPlayer : IPlayer
     {
@@ -19,9 +16,6 @@ namespace ConnectFour
             return col;
         }
     }
-
-
-
 
     class ConnectFourModel
     {
@@ -146,7 +140,6 @@ namespace ConnectFour
             return false;
         }
 
-
         public bool IsBoardFull()
         {
             for (int col = 0; col < Columns; col++)
@@ -168,10 +161,6 @@ namespace ConnectFour
         }
     }
 
-
-
-
-
     class GameController
     {
         private ConnectFourModel model;
@@ -187,7 +176,37 @@ namespace ConnectFour
 
         public void StartGame()
         {
-            while (true)
+            bool playAgain = true;
+            while (playAgain)
+            {
+                Console.Clear();
+                Console.WriteLine("===== CONNECT FOUR =====");
+                Console.WriteLine("1. Play");
+                Console.WriteLine("2. Quit");
+                Console.Write("Enter your choice: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        PlayGame();
+                        break;
+                    case "2":
+                        playAgain = false;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice! Please try again.");
+                        break;
+                }
+            }
+        }
+
+        private void PlayGame()
+        {
+            model = new ConnectFourModel();
+            bool gameOver = false;
+
+            while (!gameOver)
             {
                 Console.Clear();
                 char[,] board = model.GetBoard();
@@ -208,14 +227,14 @@ namespace ConnectFour
                         Console.Clear();
                         DisplayBoard(board);
                         Console.WriteLine("Player " + currentPlayer + " wins!");
-                        break;
+                        gameOver = true;
                     }
                     else if (model.IsBoardFull())
                     {
                         Console.Clear();
                         DisplayBoard(board);
                         Console.WriteLine("It's a draw!");
-                        break;
+                        gameOver = true;
                     }
 
                     model.SwitchPlayer();
@@ -226,9 +245,10 @@ namespace ConnectFour
                     Console.ReadLine();
                 }
             }
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
-
-
 
         private void DisplayBoard(char[,] board)
         {
@@ -258,16 +278,12 @@ namespace ConnectFour
         }
     }
 
-
-
-
     class Program
     {
         static void Main(string[] args)
         {
             GameController gameController = new GameController();
             gameController.StartGame();
-
         }
     }
 }
