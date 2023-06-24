@@ -1,22 +1,54 @@
 ﻿using System;
 
+//Logic
 namespace ConnectFour
 {
+
+    //player interface
     interface IPlayer
     {
         int GetMove();
     }
 
+
+    //class for player Human ... computer player option will be added soon
     class HumanPlayer : IPlayer
     {
+
+        //When player "X or O" is moving
         public int GetMove()
         {
-            Console.Write("Enter the column number (1-7): ");
-            int col = int.Parse(Console.ReadLine());
+            int col = 0;
+            bool isValidMove = false;
+            while (!isValidMove)
+            {
+                Console.Write("Enter the column number (1-7): ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out col))
+                {
+                    if (col >= 1 && col <= 7)
+                    {
+                        isValidMove = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input! Column number should be between 1 and 7.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input! Please enter a valid column number.");
+                }
+            }
+
             return col;
         }
     }
+    
 
+
+    //It is model which connects all the features 
     class ConnectFourModel
     {
         private const int Rows = 6;
@@ -25,6 +57,8 @@ namespace ConnectFour
         private char[,] board;
         private char currentPlayer;
 
+
+        //constructor call
         public ConnectFourModel()
         {
             board = new char[Rows, Columns];
@@ -32,6 +66,7 @@ namespace ConnectFour
             InitializeBoard();
         }
 
+        //intialization of game board
         private void InitializeBoard()
         {
             for (int row = 0; row < Rows; row++)
@@ -43,11 +78,13 @@ namespace ConnectFour
             }
         }
 
+        //use of encapsulation
         public char[,] GetBoard()
         {
             return board;
         }
 
+        //if the move is valid update
         public bool IsValidMove(int col)
         {
             if (col < 1 || col > Columns)
@@ -56,6 +93,8 @@ namespace ConnectFour
             return board[0, col - 1] == ' ';
         }
 
+
+        // where the value should be placed
         public void PlaceToken(int col)
         {
             for (int row = Rows - 1; row >= 0; row--)
@@ -68,6 +107,8 @@ namespace ConnectFour
             }
         }
 
+
+        //checking if player X or O is winner
         public bool CheckWin()
         {
             int rows = board.GetLength(0);
@@ -139,6 +180,8 @@ namespace ConnectFour
             return false;
         }
 
+
+        //if board is full draw
         public bool IsBoardFull()
         {
             for (int col = 0; col < Columns; col++)
@@ -149,17 +192,24 @@ namespace ConnectFour
             return true;
         }
 
+
+        //to get cuurent player
         public char GetCurrentPlayer()
         {
             return currentPlayer;
         }
 
+
+        //to swictch the player if one player turn over
         public void SwitchPlayer()
         {
             currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
         }
     }
 
+
+
+    //controller class in which controls and starting of the game is defined
     class GameController
     {
         private ConnectFourModel model;
@@ -167,6 +217,7 @@ namespace ConnectFour
         private IPlayer player2;
         private string currentPlayerName;
 
+        //constructor
         public GameController()
         {
             model = new ConnectFourModel();
@@ -174,6 +225,8 @@ namespace ConnectFour
             player2 = new HumanPlayer();
         }
 
+
+        //how game starts and flow of game
         public void StartGame()
         {
             bool playAgain = true;
@@ -181,6 +234,7 @@ namespace ConnectFour
             {
                 Console.Clear();
                 Console.WriteLine("===== CONNECT FOUR =====");
+                Console.WriteLine("Code Owner: Harmanpreet Kaur"); 
                 Console.WriteLine("1. Play");
                 Console.WriteLine("2. Quit");
                 Console.Write("Enter your choice: ");
@@ -192,6 +246,9 @@ namespace ConnectFour
                         PlayGame();
                         break;
                     case "2":
+                        Console.Clear();
+                        Console.WriteLine("Thank you for playing!");
+                        Console.WriteLine("Code Owner: Harmanpreet kaur"); 
                         playAgain = false;
                         break;
                     default:
@@ -201,6 +258,8 @@ namespace ConnectFour
             }
         }
 
+
+        //defines turn and winner
         private void PlayGame()
         {
             model = new ConnectFourModel();
@@ -255,6 +314,8 @@ namespace ConnectFour
             }
         }
 
+
+        //display board on console
         private void DisplayBoard(char[,] board)
         {
             int rows = board.GetLength(0);
@@ -281,6 +342,9 @@ namespace ConnectFour
         }
     }
 
+
+
+    //main class
     class Program
     {
         static void Main(string[] args)
