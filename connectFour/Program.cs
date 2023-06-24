@@ -11,8 +11,30 @@ namespace ConnectFour
     {
         public int GetMove()
         {
-            Console.Write("Enter the column number (1-7): ");
-            int col = int.Parse(Console.ReadLine());
+            int col = 0;
+            bool isValidMove = false;
+            while (!isValidMove)
+            {
+                Console.Write("Enter the column number (1-7): ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out col))
+                {
+                    if (col >= 1 && col <= 7)
+                    {
+                        isValidMove = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input! Column number should be between 1 and 7.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input! Please enter a valid column number.");
+                }
+            }
+
             return col;
         }
     }
